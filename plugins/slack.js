@@ -17,18 +17,21 @@ const Slack = function(done) {
 
 Slack.prototype.setup = function(done) {
     this.slack = new WebClient(slackConfig.token);
-    
+
     const setupSlack = function(error, result) {
         if(slackConfig.sendMessageOnStart){
             const exchange = config.watch.exchange;
             const currency = config.watch.currency;
             const asset = config.watch.asset;
+            const method = config.tradingAdvisor.method;
             const body = 'Gekko has started, Ive started watching '
                 +exchange
                 +' '
                 +currency
                 +' '
                 +asset
+                +' using '
+                +method
                 +' I\'ll let you know when I got some advice';
             this.send(body);
         }else{
@@ -50,6 +53,8 @@ Slack.prototype.processAdvice = function(advice) {
 	const text = [
         'Gekko is watching ',
         config.watch.exchange,
+        ' using method ',
+        config.tradingAdvisor.method,
         ' and has detected a new trend, advice is to go ',
         advice.recommendation,
         '.\n\nThe current ',
